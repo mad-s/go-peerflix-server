@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="refresh" content="5">
+		<title>go-peerflix-server</title>
+		<link rel="stylesheet" type="text/css" href="/static/main.css">
+	</head>
+	<body>
+		{{if ne .FlashMessage ""}}
+		<div class="flash {{.FlashType}}"> {{.FlashMessage}}<div class="close" onclick="this.parentNode.style.display='none';">&times;</div></div>
+		{{end}}
+
+		<div class="newtorrent">
+			<form method="POST" autocomplete="off">
+				<input id="magnet" type="text" value="" placeholder="magnet:?xt=..." name="magnet"/>
+				<button type="submit">Add</button>
+			</form>
+		</div>
+
+		<div id="torrents">
+			{{range .Torrents}}
+			{{$hash := .InfoHash}}
+			<div class="torrent" id="{{$hash}}">
+				<div class="header">{{.Name}}</div>
+				<div class="files">
+					{{if .Info}}
+					<ul>
+						{{range .Files}}
+						<li class="file">
+							<a href="/torrent/{{$hash}}/{{.Path}}">{{.DisplayPath}}</a></li>
+						</li>
+						{{end}}
+					</ul>
+					{{else}}
+					<div class="center">
+						<div class="spinner"></div>
+						Loading...
+					</div>
+					{{end}}
+				</div>
+				<div class="progress" style="width: {{. | progress}}%;"></div>
+			</div>
+			{{end}}
+		</div>
+		</div>
+	</body>
+</html>
